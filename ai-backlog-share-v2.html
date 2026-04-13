@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Opportunity Finder · Amplitude AI Week</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1a18; --ink2: #3d3d38; --ink3: #7a7a72; --ink4: #b0b0a8;
+  --paper: #f7f6f2; --paper2: #efede8; --paper3: #e5e3db;
+  --rule: rgba(26,26,24,0.08); --rule2: rgba(26,26,24,0.15);
+  --green: #1D9E75; --green-bg: #E1F5EE; --green-dk: #085041;
+  --purple: #534AB7; --purple-bg: #EEEDFE; --purple-dk: #3C3489;
+  --amber: #BA7517; --amber-bg: #FAEEDA; --amber-dk: #633806;
+  --sans: 'Instrument Sans', sans-serif; --mono: 'JetBrains Mono', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.6; }
+.page { max-width: 860px; margin: 0 auto; padding: 0 32px 80px; }
+
+header { padding: 64px 0 48px; border-bottom: 1px solid var(--rule2); margin-bottom: 48px; }
+.eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--ink4); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.ai-week-badge { background: var(--ink); color: white; font-size: 10px; padding: 2px 10px; border-radius: 20px; letter-spacing: .08em; }
+h1 { font-family: var(--sans); font-size: clamp(28px, 4vw, 42px); font-weight: 600; line-height: 1.15; color: var(--ink); margin-bottom: 16px; }
+h1 span { color: var(--purple); }
+.header-desc { font-size: 16px; color: var(--ink2); line-height: 1.7; max-width: 580px; margin-bottom: 24px; }
+.header-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+.meta-pill { font-size: 12px; color: var(--ink3); background: var(--paper2); border: 1px solid var(--rule2); padding: 3px 12px; border-radius: 20px; }
+
+.how-section { margin-bottom: 48px; }
+.section-label { font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--ink4); margin-bottom: 16px; }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 600px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+.step { background: white; border: 1px solid var(--rule2); border-radius: 10px; padding: 16px; }
+.step-num { font-family: var(--mono); font-size: 11px; font-weight: 300; color: var(--ink4); margin-bottom: 8px; }
+.step-title { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+.step-desc { font-size: 12px; color: var(--ink3); line-height: 1.5; }
+
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 48px; }
+@media (max-width: 600px) { .options { grid-template-columns: 1fr; } }
+.option-card { background: white; border: 1px solid var(--rule2); border-radius: 12px; overflow: hidden; }
+.option-head { padding: 20px 20px 0; }
+.option-badge { font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 12px; }
+.option-title { font-size: 20px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.option-sub { font-size: 13px; color: var(--ink3); line-height: 1.5; margin-bottom: 16px; }
+.option-divider { height: 1px; background: var(--rule); margin: 0 20px; }
+.option-body { padding: 16px 20px 20px; }
+.option-step { display: flex; gap: 10px; margin-bottom: 10px; font-size: 13px; color: var(--ink2); line-height: 1.5; }
+.step-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--paper2); border: 1px solid var(--rule2); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; color: var(--ink3); flex-shrink: 0; margin-top: 2px; }
+.option-note { font-size: 11px; color: var(--ink4); font-style: italic; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--rule); }
+.best-for { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--green); font-weight: 500; margin-top: 12px; }
+.best-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+
+.prompt-section { margin-bottom: 48px; }
+.prompt-box { background: var(--ink); border-radius: 10px; overflow: hidden; }
+.prompt-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.prompt-label { font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--mono); font-weight: 300; }
+.copy-btn { font-size: 11px; padding: 4px 12px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.15); border-radius: 5px; cursor: pointer; font-family: var(--sans); transition: all .15s; }
+.copy-btn:hover { background: rgba(255,255,255,0.2); color: white; }
+.prompt-body { padding: 20px; font-family: var(--mono); font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.85); line-height: 1.8; white-space: pre-wrap; max-height: 420px; overflow-y: auto; }
+.prompt-body::-webkit-scrollbar { width: 4px; }
+.prompt-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+.project-section { margin-bottom: 48px; }
+.instructions-box { background: white; border: 1px solid var(--rule2); border-radius: 10px; overflow: hidden; }
+.inst-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--rule); background: var(--paper2); }
+.inst-label { font-size: 11px; color: var(--ink3); font-family: var(--mono); font-weight: 300; }
+.copy-btn-light { font-size: 11px; padding: 4px 12px; background: var(--paper3); color: var(--ink2); border: 1px solid var(--rule2); border-radius: 5px; cursor: pointer; font-family: var(--sans); transition: all .15s; }
+.copy-btn-light:hover { background: var(--ink); color: white; border-color: var(--ink); }
+.inst-body { padding: 20px; font-size: 13px; color: var(--ink2); line-height: 1.75; }
+.inst-body h3 { font-size: 11px; font-weight: 600; color: var(--ink); text-transform: uppercase; letter-spacing: .07em; margin: 16px 0 8px; }
+.inst-body h3:first-child { margin-top: 0; }
+.inst-body ul { padding-left: 16px; margin-bottom: 8px; }
+.inst-body li { margin-bottom: 4px; font-size: 13px; color: var(--ink2); }
+.inst-body code { font-family: var(--mono); font-size: 11px; font-weight: 300; background: var(--paper2); border: 1px solid var(--rule2); padding: 1px 6px; border-radius: 3px; color: var(--ink2); }
+.connectors { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.connector { font-size: 12px; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--rule2); background: var(--paper2); color: var(--ink2); display: flex; align-items: center; gap: 6px; }
+.conn-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.conn-req { background: var(--green-bg); border-color: rgba(29,158,117,0.3); color: var(--green-dk); }
+
+.prereqs { background: white; border: 1px solid var(--rule2); border-radius: 10px; padding: 20px; margin-bottom: 48px; }
+.prereq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+@media (max-width: 600px) { .prereq-grid { grid-template-columns: 1fr; } }
+.prereq-item { display: flex; gap: 10px; align-items: flex-start; }
+.prereq-icon { font-size: 18px; flex-shrink: 0; }
+.prereq-title { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+.prereq-desc { font-size: 12px; color: var(--ink3); line-height: 1.5; }
+
+footer { padding-top: 40px; border-top: 1px solid var(--rule2); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.footer-credit { font-size: 12px; color: var(--ink4); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+header { animation: fadeUp .5s ease both; }
+.how-section { animation: fadeUp .5s .1s ease both; }
+.options { animation: fadeUp .5s .15s ease both; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div class="eyebrow">
+    Amplitude · Product Ops
+    <span class="ai-week-badge">AI Week 2026</span>
+  </div>
+  <h1>Find your <span>AI automation</span><br>opportunities in 90 seconds</h1>
+  <p class="header-desc">This tool mines your Granola meeting notes from the last 30 days, surfaces every manual workflow that could be automated, and scores each one by impact vs effort. No setup required — just Claude and Granola.</p>
+  <div class="header-meta">
+    <span class="meta-pill">⏱ ~90 seconds to run</span>
+    <span class="meta-pill">🔒 Personal folder excluded</span>
+    <span class="meta-pill">🔗 Granola required</span>
+    <span class="meta-pill">✨ Works for any role</span>
+  </div>
+</header>
+
+<!-- HOW IT WORKS -->
+<div class="how-section">
+  <div class="section-label">How it works</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">01</div><div class="step-title">Connects to Granola</div><div class="step-desc">Pulls your last 30 days of meeting notes. Personal folder always excluded.</div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-title">Mines for signals</div><div class="step-desc">Asks Claude to find manual work, friction points, and things people wished were automated.</div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-title">Scores each opportunity</div><div class="step-desc">Impact ÷ Effort = priority score. Quick wins bubble to the top automatically.</div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-title">Renders the backlog</div><div class="step-desc">Interactive widget sorted by ROI, grouped into Quick Wins / Medium / Bigger Bets.</div></div>
+  </div>
+</div>
+
+<!-- PREREQS -->
+<div class="prereqs">
+  <div class="section-label">Before you start — you'll need</div>
+  <div class="prereq-grid">
+    <div class="prereq-item">
+      <div class="prereq-icon">🤖</div>
+      <div><div class="prereq-title">Claude access</div><div class="prereq-desc">claude.ai — you're already set if you're reading this at Amplitude</div></div>
+    </div>
+    <div class="prereq-item">
+      <div class="prereq-icon">🎙️</div>
+      <div><div class="prereq-title">Granola connected</div><div class="prereq-desc">In Claude: Settings → Connectors → Granola. Toggle it on. Takes 30 seconds.</div></div>
+    </div>
+    <div class="prereq-item">
+      <div class="prereq-icon">📝</div>
+      <div><div class="prereq-title">Granola meeting notes</div><div class="prereq-desc">The more meetings you have in Granola, the richer the output. 2+ weeks works great.</div></div>
+    </div>
+    <div class="prereq-item">
+      <div class="prereq-icon">🚫</div>
+      <div><div class="prereq-title">A "Personal" folder (optional)</div><div class="prereq-desc">If you have one, it's automatically excluded. Your personal meetings stay private.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TWO OPTIONS -->
+<div class="section-label">Two ways to use it</div>
+<div class="options">
+  <div class="option-card">
+    <div class="option-head">
+      <span class="option-badge" style="background:var(--green-bg);color:var(--green-dk)">Option A · Instant</span>
+      <div class="option-title">Paste a prompt</div>
+      <div class="option-sub">Copy the prompt below and paste it into any Claude chat with Granola connected. Done in one shot.</div>
+    </div>
+    <div class="option-divider"></div>
+    <div class="option-body">
+      <div class="option-step"><div class="step-dot">1</div>Open claude.ai in a new chat</div>
+      <div class="option-step"><div class="step-dot">2</div>Make sure Granola is enabled in your connectors</div>
+      <div class="option-step"><div class="step-dot">3</div>Copy the prompt below and paste it in</div>
+      <div class="option-step"><div class="step-dot">4</div>Hit enter — wait about 90 seconds</div>
+      <div class="option-note">No account setup. Works immediately. Great for trying it once.</div>
+      <div class="best-for"><div class="best-dot"></div>Best for: trying it now, one-off analysis</div>
+    </div>
+  </div>
+  <div class="option-card">
+    <div class="option-head">
+      <span class="option-badge" style="background:var(--purple-bg);color:var(--purple-dk)">Option B · Persistent</span>
+      <div class="option-title">Claude Project</div>
+      <div class="option-sub">Set up a dedicated Claude Project once. Run it anytime with one sentence. Share with your team.</div>
+    </div>
+    <div class="option-divider"></div>
+    <div class="option-body">
+      <div class="option-step"><div class="step-dot">1</div>Go to Claude → Projects → New Project</div>
+      <div class="option-step"><div class="step-dot">2</div>Name it "AI Opportunity Finder"</div>
+      <div class="option-step"><div class="step-dot">3</div>Paste the project instructions below</div>
+      <div class="option-step"><div class="step-dot">4</div>Enable Granola connector in the project</div>
+      <div class="option-step"><div class="step-dot">5</div>Type "find opportunities" to run it anytime</div>
+      <div class="option-note">Once set up, anyone with the link can run it. Re-run weekly for fresh signals.</div>
+      <div class="best-for"><div class="best-dot"></div>Best for: ongoing use, team sharing, weekly runs</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROMPT -->
+<div class="prompt-section">
+  <div class="section-label">Option A — The prompt</div>
+  <div class="prompt-box">
+    <div class="prompt-head">
+      <span class="prompt-label">paste into claude chat · granola must be connected</span>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copy prompt</button>
+    </div>
+    <div class="prompt-body">You are an AI workflow analyst. Your job is to mine my recent meeting notes for AI automation opportunities and score them by impact and effort.
+
+Step 1 — Pull meetings
+Use Granola MCP to list my meetings from the last 30 days. Exclude any folder called "Personal."
+
+Step 2 — Mine for signals
+Query Granola with this question across all meetings:
+"What manual work, repeated tasks, friction points, or things that take too long came up? What workflows felt broken or inefficient? What did people say they wished were automated or easier?"
+
+Step 3 — Score and rank each opportunity
+- Impact (1–5): How much time/pain does this save? How many people does it affect?
+- Effort (1–5): How hard is this to build? (1 = prompt in Claude today, 5 = engineering project)
+- Score = Impact ÷ Effort (higher = better ROI)
+- Type: claude-chat / automation / agent / workflow / integration
+
+Step 4 — Display as interactive backlog
+Render a beautiful scored backlog widget showing all opportunities sorted by score, grouped into:
+🟢 Quick wins (effort 1–2): do today with Claude or simple automation
+🟡 Medium effort (effort 3): workflow or agent build
+🔴 Bigger bets (effort 4–5): integration or engineering involvement
+
+Each row should be expandable to show the specific pain point and suggested fix.
+Include Granola meeting source links where available.
+Call out the single biggest recurring theme at the top.
+
+Rules:
+- Never include Personal folder meetings
+- Be specific — name the actual pain, not a generic category
+- Tie each opportunity back to the exact meetings where it surfaced
+
+Go.</div>
+  </div>
+</div>
+
+<!-- PROJECT INSTRUCTIONS -->
+<div class="project-section">
+  <div class="section-label">Option B — Claude Project instructions</div>
+  <div class="instructions-box">
+    <div class="inst-head">
+      <span class="inst-label">claude.ai → projects → new project → paste into instructions</span>
+      <button class="copy-btn-light" onclick="copyInstructions(this)">Copy instructions</button>
+    </div>
+    <div class="inst-body">
+      <h3>Project name suggestion</h3>
+      <p>AI Opportunity Finder</p>
+      <h3>Instructions to paste</h3>
+      <p>You are an AI workflow analyst that mines Granola meeting notes to find AI automation opportunities.</p>
+      <p style="margin-top:8px">When someone says <code>run the backlog</code>, <code>find opportunities</code>, <code>mine my meetings</code>, or similar:</p>
+      <ul style="margin-top:8px">
+        <li>Use Granola MCP to list meetings from the last 30 days</li>
+        <li>Exclude any folder called "Personal"</li>
+        <li>Query for: manual work, repeated tasks, friction points, broken handoffs, things people wished were automated</li>
+        <li>Score each: Impact ÷ Effort, type: claude-chat / automation / agent / workflow / integration</li>
+        <li>Render a beautiful interactive scored backlog widget, sorted by score, grouped into Quick Wins / Medium / Bigger Bets</li>
+        <li>Each row expands to show the specific pain, suggested fix, and Granola source links</li>
+        <li>Call out the single biggest recurring theme at the top</li>
+      </ul>
+      <p style="margin-top:8px">You can also respond to:</p>
+      <ul style="margin-top:8px">
+        <li><code>deep dive on [opportunity]</code> → full implementation plan</li>
+        <li><code>what's the easiest thing I could automate today?</code> → top 3 quick wins only</li>
+        <li><code>what's the biggest theme?</code> → #1 recurring pain summary</li>
+        <li><code>export this</code> → format as table for Sheets or Notion</li>
+      </ul>
+      <h3>Connectors to enable in the project</h3>
+      <div class="connectors">
+        <span class="connector conn-req"><span class="conn-dot" style="background:#1D9E75"></span>Granola (required)</span>
+        <span class="connector"><span class="conn-dot" style="background:#5e6ad2"></span>Linear (optional)</span>
+        <span class="connector"><span class="conn-dot" style="background:#E8A838"></span>Asana (optional)</span>
+        <span class="connector"><span class="conn-dot" style="background:#611f69"></span>Slack (optional)</span>
+      </div>
+      <p style="font-size:12px;color:var(--ink4);margin-top:6px">Granola is required. Others add richer context but aren't necessary to get started.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-credit">Built by Shauna Prussin · Product Ops · Amplitude AI Week 2026</div>
+</footer>
+
+</div>
+
+<script>
+const PROMPT = `You are an AI workflow analyst. Your job is to mine my recent meeting notes for AI automation opportunities and score them by impact and effort.
+
+Step 1 — Pull meetings
+Use Granola MCP to list my meetings from the last 30 days. Exclude any folder called "Personal."
+
+Step 2 — Mine for signals
+Query Granola with this question across all meetings:
+"What manual work, repeated tasks, friction points, or things that take too long came up? What workflows felt broken or inefficient? What did people say they wished were automated or easier?"
+
+Step 3 — Score and rank each opportunity
+- Impact (1–5): How much time/pain does this save? How many people does it affect?
+- Effort (1–5): How hard is this to build? (1 = prompt in Claude today, 5 = engineering project)
+- Score = Impact ÷ Effort (higher = better ROI)
+- Type: claude-chat / automation / agent / workflow / integration
+
+Step 4 — Display as interactive backlog
+Render a beautiful scored backlog widget showing all opportunities sorted by score, grouped into:
+🟢 Quick wins (effort 1–2): do today with Claude or simple automation
+🟡 Medium effort (effort 3): workflow or agent build
+🔴 Bigger bets (effort 4–5): integration or engineering involvement
+
+Each row should be expandable to show the specific pain point and suggested fix.
+Include Granola meeting source links where available.
+Call out the single biggest recurring theme at the top.
+
+Rules:
+- Never include Personal folder meetings
+- Be specific — name the actual pain, not a generic category
+- Tie each opportunity back to the exact meetings where it surfaced
+
+Go.`;
+
+const INSTRUCTIONS = `You are an AI workflow analyst that mines Granola meeting notes to find AI automation opportunities.
+
+When someone says "run the backlog," "find opportunities," "mine my meetings," or similar:
+1. Use Granola MCP to list meetings from the last 30 days
+2. Exclude any folder called "Personal"
+3. Query for: manual work, repeated tasks, friction points, broken handoffs, things people wished were automated
+4. Score each: Impact ÷ Effort, type: claude-chat / automation / agent / workflow / integration
+5. Render a beautiful interactive scored backlog widget, sorted by score, grouped into Quick Wins / Medium / Bigger Bets
+6. Each row expands to show the specific pain, suggested fix, and Granola source links
+7. Call out the single biggest recurring theme at the top
+
+You can also respond to:
+- "deep dive on [opportunity]" → full implementation plan
+- "what's the easiest thing I could automate today?" → top 3 quick wins only
+- "what's the biggest theme?" → #1 recurring pain summary
+- "export this" → format as table for Sheets or Notion
+
+Always be specific — name the actual pain from the actual meeting.
+Never include Personal folder meetings.`;
+
+function copyPrompt(btn) {
+  navigator.clipboard.writeText(PROMPT).then(() => {
+    btn.textContent = 'Copied! ✓';
+    setTimeout(() => btn.textContent = 'Copy prompt', 2500);
+  });
+}
+
+function copyInstructions(btn) {
+  navigator.clipboard.writeText(INSTRUCTIONS).then(() => {
+    btn.textContent = 'Copied! ✓';
+    setTimeout(() => btn.textContent = 'Copy instructions', 2500);
+  });
+}
+</script>
+</body>
+</html>
